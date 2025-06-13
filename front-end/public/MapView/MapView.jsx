@@ -44,11 +44,38 @@ const AppStyles = () => (
              background: #000;
              border-bottom-color: #fff;
         }
-        .safezone-wrapper.high-contrast .popup-content,
+
         .safezone-wrapper.high-contrast .settings-menu {
              background-color: #2c2c2c;
              border: 1px solid var(--border-color);
         }
+
+        /* Estilos de alto contraste para o popup do Leaflet */
+        .safezone-wrapper.high-contrast .leaflet-popup-content-wrapper {
+            background: #000;
+            color: #fff; /* Define a cor do texto padrão para branco */
+        }
+
+        .safezone-wrapper.high-contrast .leaflet-popup-tip {
+            background: #000;
+        }
+        
+        /* Garante que o texto dentro do nosso div personalizado seja branco */
+        .safezone-wrapper.high-contrast .popup-content {
+            color: #fff;
+        }
+
+        .safezone-wrapper.high-contrast .popup-content h3 {
+            color: var(--primary-color); /* Mantém o título azul */
+        }
+
+        .safezone-wrapper.high-contrast .leaflet-popup-close-button {
+            color: #fff;
+        }
+        .safezone-wrapper.high-contrast .leaflet-popup-close-button:hover {
+            color: #ddd;
+        }
+
 
         /* Cabeçalho */
         .safezone-header {
