@@ -363,11 +363,12 @@ export default function MapView() {
         const fetchAbrigos = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("http://localhost:3000/abrigos");
+                //  API endpoint updated to /getAbrigos
+                const res = await axios.get("http://localhost:3000/getAbrigos");
                 setAbrigos(res.data || []);
             } catch (err) {
                 console.error("Erro ao buscar abrigos:", err);
-                setError("Falha ao carregar dados dos abrigos.");
+                setError("Falha ao carregar dados dos abrigos. Verifique o console para mais detalhes.");
             } finally {
                 setLoading(false);
             }
@@ -420,7 +421,7 @@ export default function MapView() {
         const map = mapInstanceRef.current;
         
         if (!map) {
-            const defaultCenter = [-30.0346, -51.2177];
+            const defaultCenter = [-30.0346, -51.2177]; // Default to Porto Alegre
             const initialCenter = userLocation || defaultCenter;
             mapInstanceRef.current = L.map(mapContainerRef.current).setView(initialCenter, 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -432,11 +433,11 @@ export default function MapView() {
 
         if (userLocation) {
              if (userMarkerRef.current) {
-                userMarkerRef.current.setLatLng(userLocation);
-            } else {
-                userMarkerRef.current = L.marker(userLocation).addTo(mapInstanceRef.current)
-                    .bindPopup('<strong>Sua Posição Atual</strong>');
-            }
+                 userMarkerRef.current.setLatLng(userLocation);
+             } else {
+                 userMarkerRef.current = L.marker(userLocation).addTo(mapInstanceRef.current)
+                     .bindPopup('<strong>Sua Posição Atual</strong>');
+             }
         }
         
         shelterMarkersRef.current.forEach(marker => mapInstanceRef.current.removeLayer(marker));
@@ -450,12 +451,15 @@ export default function MapView() {
 
         abrigos.forEach((abrigo) => {
             if (abrigo.latitude && abrigo.longitude) {
+                // Popup content updated to match the new data structure
                 const popupContent = `
                     <div class="popup-content">
                         <h3>${abrigo.nome || 'Nome não informado'}</h3>
-                        <p><strong>Tipo:</strong> ${abrigo.tipo || 'Não informado'}</p>
-                        <p><strong>Capacidade:</strong> ${abrigo.capacidade || 'Não informada'}</p>
-                        ${abrigo.recursos ? `<p><strong>Recursos:</strong> ${abrigo.recursos}</p>` : ''}
+                        <p><strong>Endereço:</strong> ${abrigo.endereco || 'Não informado'}</p>
+                        <p><strong>Capacidade:</strong> ${abrigo.capacidade !== undefined ? abrigo.capacidade : 'Não informada'}</p>
+                        <p><strong>Telefone:</strong> ${abrigo.telefone || 'Não informado'}</p>
+                        ${abrigo.servicos_disponiveis && abrigo.servicos_disponiveis.length > 0 ? `<p><strong>Serviços:</strong> ${abrigo.servicos_disponiveis.join(', ')}</p>` : ''}
+                        ${abrigo.observacoes ? `<p><strong>Obs:</strong> ${abrigo.observacoes}</p>` : ''}
                         <button class="popup-button" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${abrigo.latitude},${abrigo.longitude}', '_blank')">Ver Rotas</button>
                     </div>`;
                 const marker = L.marker([abrigo.latitude, abrigo.longitude], { icon: shelterIcon })
@@ -472,7 +476,8 @@ export default function MapView() {
             mapInstanceRef.current.setView(userLocation, 14);
             mapInstanceRef.current.flyTo(userLocation, 15);
         } else {
-            alert("Localização não disponível. Ative a permissão no seu navegador.");
+            // Replaced alert with a console warning to avoid blocking UI
+            console.warn("Localização não disponível. Ative a permissão no seu navegador.");
         }
     };
     
