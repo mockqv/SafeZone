@@ -4,15 +4,18 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@genkit-ai/googleai": "^1.12.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "genkit": "^1.12.0",
     "pg": "^8.16.0"
   }
 }
